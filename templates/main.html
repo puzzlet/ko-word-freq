@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link type="text/css" rel="stylesheet" href="http://code.shutterstock.com/rickshaw/rickshaw.min.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="http://code.shutterstock.com/rickshaw/vendor/d3.layout.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/rickshaw/1.1.0/rickshaw.min.js"></script>
+</head>
+<body>
+<div>
+<div id="chart"></div>
+<div id="legend"></div>
+</div>
+<p>네이버에서 보기:</p>
+<ul>
+    {% for keyword, url in links %}
+        <li><a href="http://newslibrary.naver.com/search/searchByKeyword.nhn#{{ url }}">{{ keyword }}</a></li>
+    {% endfor %}
+</ul>
+
+<script>
+$(function () {
+
+var data = {{ series | tojson | safe }};
+
+var palette = new Rickshaw.Color.Palette({scheme: 'munin'});
+for (var i = 0; i < data.length; i++) {
+    data[i]['color'] = palette.color();
+}
+var graph = new Rickshaw.Graph({
+    element: document.getElementById('chart'),
+    width: 800,
+    height: 400,
+    renderer: 'line',
+    series: data,
+});
+
+
+var hoverDetail = new Rickshaw.Graph.HoverDetail({ graph: graph });
+
+
+var x_axis = new Rickshaw.Graph.Axis.Time({ graph: graph });
+
+var legend = new Rickshaw.Graph.Legend({
+    element: document.getElementById('legend'),
+    graph: graph
+});
+
+graph.render();
+
+});
+</script>
+
+</body>
+</html>
