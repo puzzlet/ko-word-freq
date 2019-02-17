@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/build/
+    steps:
+      - checkout
+      - run:
+          name: env
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - run:
+          name: test
+          command: |
+            . venv/bin/activate
+            export PYTHONPATH=.:$PYTHONPATH
+            pytest --cov ko_word_freq/ --cov-report=xml ko_word_freq/
+      - run:
+          name: coverage
+          command: |
+            . venv/bin/activate
+            codecov
+            coveralls
