@@ -1,2 +1,6 @@
+from ko_word_freq import webapp
+
+
 def test_null():
-    pass
+    client = webapp.app.test_client()
+    client.get('/')
